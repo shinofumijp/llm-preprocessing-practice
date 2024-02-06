@@ -1,0 +1,20 @@
+#!/usr/bin/env python3
+
+import os
+import subprocess
+
+# Create a virtual environment named 'venv'
+subprocess.run(["python3", "-m", "venv", "venv"])
+
+# Activate the virtual environment
+# Note: The activation command differs between operating systems
+# For Unix or MacOS, use:
+activate_command = "source venv/bin/activate"
+# For Windows, use:
+# activate_command = "venv\\Scripts\\activate"
+
+# Execute the activation command
+os.system(activate_command)
+
+# Install required packages using pip
+subprocess.run(["pip", "install", "-r", "requirements.txt"])
