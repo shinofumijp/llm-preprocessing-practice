@@ -18,3 +18,5 @@ os.system(activate_command)
 
 # Install required packages using pip
 subprocess.run(["pip", "install", "-r", "requirements.txt"])
+
+os.system("python -m unidic download")
