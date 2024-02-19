@@ -381,7 +381,13 @@ class RemoveOnewordNumber(TokenFilter):
         self.date_pattern = self._date_pattern() if date_pattern is None else date_pattern
 
     def _date_pattern(self) -> str:
-        return re.compile(r'(\d{2,4}([-年/])\d{1,2}([-月/])\d{1,2}日?)|(\d{2,4}([-年/])\d{1,2}([-月])?)|(\d{1,2}([-月/])\d{1,2}日?).{0,8}$')
+        """
+        日付のみのパターンと日付と数文字のみのパターンを削除
+        例) 2024年2月2日, 2024年2月, 2月2日, 2024/2/2, 2024/2, 2/2, 2024-2-2, 2024-2, 2-2
+        日付 + 数文字はHTMLの場合には検索時の補助のために用いられるもので文章になっていないことが多い
+        例) 2024年2月2日 (8)
+        """
+        return re.compile(r'((\d{2,4}([-年/])\d{1,2}([-月/])\d{1,2}日?)|(\d{2,4}([-年/])\d{1,2}([-月])?)|(\d{1,2}([-月/])\d{1,2}日?)).{0,8}$')
 
     def apply(self, token: Token) -> Token:
         text = token.text
