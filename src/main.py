@@ -13,6 +13,36 @@ import os
 tagger = Tagger('-Owakati')
 
 
+class DocumentFromHTML(Document):
+    def __init__(self, text: str, url: str = "", *args, **kwargs):
+        super().__init__(text, *args, **kwargs)
+        self.url = url
+
+    def __str__(self) -> str:
+        return f"{self.url}\n{self.text}"
+
+
+class JSONHTMLLoader(Filter):
+    def __init__(self, key: str = "text", ignore: bool = False, *args: Any, **kwargs: Any) -> None:
+        super().__init__(*args, **kwargs)
+        self.key = key
+        self.ignore = ignore
+
+    def apply(self, document: DocumentFromHTML) -> DocumentFromHTML:
+        try:
+            data = json.loads(document.text)
+            document.text = str(data[self.key])
+            document.url = str(data.get("url", ""))
+        except Exception as e:
+            if self.ignore:
+                document.is_rejected = True
+                return document
+            else:
+                raise e
+
+        return document
+
+
 def __load_and_write(lines, output_base: str, token_filter: Filter):
     removed_tokens: dict[str, set[str]] = {}
     cleaner = Compose([
@@ -35,21 +65,77 @@ def __load_and_write(lines, output_base: str, token_filter: Filter):
                 writer.write(token + "\n")
 
 
-def process_file(input_file: str, output_base: str, remained_lines: list[str], stats):
+def __makedirs_for_output(input_file: str, output_base: str):
     input_file_prefix = os.path.splitext(os.path.basename(input_file))[0]
-    output_base: str = os.path.join(output_base, input_file_prefix)
-    os.makedirs(output_base, exist_ok=True)
+    output_base_for_file: str = os.path.join(output_base, input_file_prefix)
+    os.makedirs(output_base_for_file, exist_ok=True)
+    return output_base_for_file
 
+
+def exec_deduplication(lines: str, output_base: str, remained_lines: list[str] = [], stats: list[dict] = []):
+    cleaner = Compose([
+        document_filters.JSONLoader(),
+        deduplication.GenerateDedupLSH(),
+        deduplication.LSHDeduplicator(
+            online_dedup=True,
+            store_blacklist=True
+        ),
+        document_filters.JSONDumper()
+    ])
+
+    with open(os.path.join(output_base, "dedup.result.jsonl"), "w") as writer:
+        with open(os.path.join(output_base, "dedup.rejected.jsonl"), "w") as rejected:
+            for line in lines:
+                result = cleaner.apply(Document(line))
+                if result.is_rejected:
+                    rejected.write(result.text + "\n")
+                else:
+                    writer.write(result.text + "\n")
+
+    with open(os.path.join(output_base, "dedup.stat.json"), "w") as writer:
+        writer.write(json.dumps(cleaner.statistics, ensure_ascii=False))
+
+
+def process_load_and_write(input_file: str, output_base: str):
     with open(input_file) as fp:
         lines = fp.readlines()
 
+    output_base = __makedirs_for_output(input_file, output_base)
     __load_and_write(lines, output_base, RemoveIncompleteSentence())
     __load_and_write(lines, output_base, DiscardSpecialCharactersJa())
     __load_and_write(lines, output_base, RemoveOnewordNumber())
 
+
+def url_dedup(lines: list[str], url_set: set[str], output_base: str, stats: list[dict]):
+    cleaner = Compose([
+        JSONHTMLLoader(),
+        DeduplicationByURL(url_set=url_set),
+        document_filters.JSONDumper(),
+    ])
+
+    remained_lines = []
+    with open(os.path.join(output_base, "url_dedup.rejected.jsonl"), "w") as rejected:
+        with open(os.path.join(output_base, "url_dedup.result.jsonl"), "w") as writer:
+            for line in lines:
+                result = cleaner.apply(DocumentFromHTML(line))
+                if result.is_rejected:
+                    rejected.write(result.text + "\n")
+                else:
+                    writer.write(result.text + "\n")
+                    remained_lines.append(result.text)
+
+    with open(os.path.join(output_base, "url_dedup.stat.jsonl"), "w") as writer:
+        writer.write(json.dumps(cleaner.statistics, ensure_ascii=False) + "\n")
+
+    stats.append(cleaner.statistics)
+
+    return remained_lines
+
+
+def process_file(lines: list[str], output_base: str, stats: list[dict]):
+    remained_lines = []
     cleaner = Compose([
         document_filters.JSONLoader(),
-        # DeduplicationByURL(),
         document_filters.DocumentNormalizer(),
         DiscardAdultContentJa(),
         DiscardBBSComments(),
@@ -85,50 +171,64 @@ def process_file(input_file: str, output_base: str, remained_lines: list[str], s
 
     stats.append(cleaner.statistics)
 
+    return remained_lines
 
-def main(input_dir: str, output_dir: str, dedup: bool = False):
+
+def __readlines(input_file: str):
+    with open(input_file) as fp:
+        return fp.readlines()
+
+
+def main(input_dir: str, output_dir: str, preprocess: bool = True, dedup: bool = False, output_token_filter_result: bool = True):
     start = datetime.now()
     output_base = os.path.join(output_dir, start.strftime("%Y%m%d%H%M%S"))
-    os.makedirs(output_base, exist_ok=True)
 
-    remained_lines = []
-    stats = []
-    [process_file(os.path.join(input_dir, input_file), output_base, remained_lines, stats)
-        for input_file in os.listdir(input_dir) if input_file.endswith(".jsonl")]
+    if output_token_filter_result:
+        [process_load_and_write(os.path.join(input_dir, input_file), output_base)
+            for input_file in os.listdir(input_dir) if input_file.endswith(".jsonl")]
 
-    with open(os.path.join(output_base, "result.jsonl"), "w") as writer:
-        for line in remained_lines:
-            writer.write(line + "\n")
+    file_lines = {input_file: __readlines(os.path.join(input_dir, input_file))
+                  for input_file in os.listdir(input_dir) if input_file.endswith(".jsonl")}
 
-    with open(os.path.join(output_base, "stats.jsonl"), "w") as writer:
-        for stat in stats:
-            writer.write(json.dumps(stat, ensure_ascii=False) + "\n")
+    if preprocess:
+        stats, url_set = [], set()
+        for input_file, lines in file_lines.items():
+            input_full_path = os.path.join(input_dir, input_file)
+            output_base_for_input = __makedirs_for_output(input_full_path, output_base)
+            lines = url_dedup(lines, url_set, output_base_for_input, stats)
+            file_lines[input_file] = lines
+
+        with open(os.path.join(output_base, "url_dedup.urls.txt"), "w") as writer:
+            for url in url_set:
+                writer.write(url + "\n")
+
+        remained_lines, stats = [], []
+        for input_file, lines in file_lines.items():
+            input_full_path = os.path.join(input_dir, input_file)
+            output_base_for_input = __makedirs_for_output(input_full_path, output_base)
+            lines = process_file(lines, output_base_for_input, stats)
+            file_lines[input_file] = lines
+
+        with open(os.path.join(output_base, "result.filtering.jsonl"), "w") as writer:
+            for line in remained_lines:
+                writer.write(line + "\n")
+
+        with open(os.path.join(output_base, "stats.filtering.jsonl"), "w") as writer:
+            for stat in stats:
+                writer.write(json.dumps(stat, ensure_ascii=False) + "\n")
 
     if dedup:
-        cleaner = Compose([
-            document_filters.JSONLoader(),
-            deduplication.GenerateDedupLSH(),
-            deduplication.LSHDeduplicator(
-                online_dedup=True,
-                store_blacklist=True
-            ),
-            document_filters.JSONDumper()
-        ])
-        with open(os.path.join(output_base, "dedup.jsonl"), "w") as writer:
-            for line in remained_lines:
-                result = cleaner.apply(Document(line))
-                writer.write(result.text + "\n")
-
-        with open(os.path.join(output_base, "stat.dedup.json"), "w") as writer:
-            writer.write(json.dumps(cleaner.statistics, ensure_ascii=False))
+        lines = []
+        [lines.extend(l) for l in file_lines.values()]
+        exec_deduplication(lines, output_base)
 
 
 class DeduplicationByURL(Filter):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, url_set: set[str] = set(), *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.url_set = set()
+        self.url_set = url_set
 
-    def apply(self, document: Document) -> Document:
+    def apply(self, document: DocumentFromHTML) -> DocumentFromHTML:
         if document.url in self.url_set:
             document.is_rejected = True
         else:
@@ -402,15 +502,6 @@ class DiscardSpecialCharactersJa(TokenFilter):
         if total_chars_count > 0 and special_chars_count / total_chars_count > 0.5:
             token.is_rejected = True
         return token
-
-
-class DocumentFromHTML(Document):
-    def __init__(self, text: str, url: str, *args, **kwargs):
-        super().__init__(text, *args, **kwargs)
-        self.url = url
-
-    def __str__(self) -> str:
-        return f"{self.url}\n{self.text}"
 
 
 if __name__ == "__main__":
