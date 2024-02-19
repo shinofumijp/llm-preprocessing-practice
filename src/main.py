@@ -517,4 +517,5 @@ if __name__ == "__main__":
     parser.add_argument('--output_dir', type=str,
                         help='The input file containing documents to process', required=False, default="./output")
     args = parser.parse_args()
-    main(input_dir=args.input_dir, output_dir=args.output_dir)
+    main(input_dir=args.input_dir, output_dir=args.output_dir,
+         preprocess=True, dedup=True, output_token_filter_result=False)
