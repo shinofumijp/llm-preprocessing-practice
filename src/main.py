@@ -9,6 +9,9 @@ from fugashi import Tagger
 from typing import Any, Union
 from os import PathLike
 import os
+import redis
+import uuid
+from src.minhash import deduplicate_documents, create_minhash_lsh, create_minhash_index
 
 tagger = Tagger('-Owakati')
 
@@ -72,7 +75,7 @@ def __makedirs_for_output(input_file: str, output_base: str):
     return output_base_for_file
 
 
-def exec_deduplication(lines: str, output_base: str, remained_lines: list[str] = [], stats: list[dict] = []):
+def exec_hojichar_deduplication(lines: list[str], output_base: str):
     cleaner = Compose([
         document_filters.JSONLoader(),
         deduplication.GenerateDedupLSH(),
@@ -94,6 +97,29 @@ def exec_deduplication(lines: str, output_base: str, remained_lines: list[str] =
 
     with open(os.path.join(output_base, "dedup.stat.json"), "w") as writer:
         writer.write(json.dumps(cleaner.statistics, ensure_ascii=False))
+
+
+def exec_deduplication(lines: str, output_base: str):
+    redis_host = os.environ.get("REDIS_HOST", "localhost")
+    redis_port = os.environ.get("REDIS_PORT", 6379)
+    redis_db = os.environ.get("REDIS_DB", 0)
+    r = redis.Redis(host=redis_host, port=redis_port, db=redis_db)
+    docs: dict[str, str] = {}
+    for line in lines:
+        data = json.loads(line)
+        text = str(data["text"])
+        key = uuid.uuid4()
+        r.set(str(key), text)
+        docs[key] = text
+
+    lsh = create_minhash_lsh(storage_config={"type": "redis", "redis":  {
+                             'host': redis_host, 'port': redis_port, 'db': redis_db}})
+    create_minhash_index(lsh, docs)
+    deduplicated: dict[str, str] = deduplicate_documents(docs, lsh)
+
+    with open(os.path.join(output_base, "dedup.result.jsonl"), "w") as writer:
+        for text in deduplicated.values():
+            writer.write(json.dumps({"text": text}, ensure_ascii=False) + "\n")
 
 
 def process_load_and_write(input_file: str, output_base: str):
