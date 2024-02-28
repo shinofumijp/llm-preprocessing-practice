@@ -1,4 +1,4 @@
-from src.minhash import deduplicate_documents, create_minhash_lsh, create_minhash_index
+from src.dedup.minhash import deduplicate_documents, create_minhash_lsh, create_minhash_index
 
 
 class TestMinhash:

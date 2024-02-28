@@ -4,7 +4,7 @@ import unicodedata
 import re
 import os
 
-from src.datastructures.unionfind import UnionFind
+from src.models.datastructures.unionfind import UnionFind
 
 
 def normalize_document(text: str):
