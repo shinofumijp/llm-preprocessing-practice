@@ -2,8 +2,8 @@ import argparse
 from datetime import datetime
 import os
 
-from src.dedup.dedup import exec_deduplication
-from src.filters.pipeline import execute_filtering
+from preprocessing.dedup.dedup import exec_deduplication
+from preprocessing.filters.pipeline import execute_filtering
 
 
 def __readlines(input_file: str):
