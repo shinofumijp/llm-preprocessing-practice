@@ -4,9 +4,9 @@ import os
 import json
 
 
-from src.filters.token_filters import RemoveIncompleteSentence, RemoveHeadTailWhitespaceTokenizer, DiscardSpecialCharactersJa, RemoveOnewordNumber
-from src.filters.document_filters import DiscardAdultContentJa, DiscardBBSComments, DiscardDiscriminationContentJa, RemoveRepetition, NewLineSentenceTokenizer, MergeTokens
-from src.dedup.dedup import url_dedup
+from preprocessing.filters.token_filters import RemoveIncompleteSentence, RemoveHeadTailWhitespaceTokenizer, DiscardSpecialCharactersJa, RemoveOnewordNumber
+from preprocessing.filters.document_filters import DiscardAdultContentJa, DiscardBBSComments, DiscardDiscriminationContentJa, RemoveRepetition, NewLineSentenceTokenizer, MergeTokens
+from preprocessing.dedup.dedup import url_dedup
 
 
 def __makedirs_for_output(input_file: str, output_base: str):

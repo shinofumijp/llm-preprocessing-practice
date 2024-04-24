@@ -4,7 +4,7 @@ from fugashi import Tagger
 import os
 import re
 
-from src.filters.document_filters import NewLineSentenceTokenizer, MergeTokens, BeforeMergeTokenCallback
+from preprocessing.filters.document_filters import NewLineSentenceTokenizer, MergeTokens, BeforeMergeTokenCallback
 
 
 class RemoveIncompleteSentence(TokenFilter):
