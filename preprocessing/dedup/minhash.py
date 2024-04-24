@@ -3,8 +3,9 @@ from transformers import GPT2Tokenizer
 import unicodedata
 import re
 import os
+import logging
 
-from src.models.datastructures.unionfind import UnionFind
+from preprocessing.models.datastructures.unionfind import UnionFind
 
 
 def normalize_document(text: str):
@@ -23,14 +24,23 @@ def normalize_document(text: str):
     return text
 
 
-def create_minhash(text: str, n: int = 5, num_perm: int = 128):
+def create_minhash(text: str, n: int = 5, num_perm: int = 128, redis=None, doc_id: str = ""):
     """
     文書をトークン化し、MinHashオブジェクトを生成する関数
     """
+    if redis is not None and doc_id != "":
+        minhash = redis.lrange(f"dedup_files.minhash.{doc_id}", 0, -1)
+        if minhash:
+            return MinHash(num_perm, hashvalues=list(minhash))
+
     n_grams = normalize_and_tokenize(text, n)
     minhash = MinHash(num_perm=num_perm)
     for n_gram in n_grams:
         minhash.update(n_gram.encode('utf8'))
+
+    if redis:
+        redis.rpush(f"dedup_files.minhash.{doc_id}", *[str(v) for v in minhash.hashvalues])
+
     return minhash
 
 
@@ -49,18 +59,22 @@ def normalize_and_tokenize(text: str, n: int = 5):
     return tokenize_docs(normalized_text, n)
 
 
-def process_batch(batch: dict[str, str], lsh, n=5, num_perm=128):
-    minhashes = {k: create_minhash(text, n, num_perm) for k, text in batch.items()}
+def process_batch(batch: dict[str, str], lsh, n=5, num_perm=128, redis=None):
+    minhashes = {doc_id: create_minhash(text, n, num_perm, redis, doc_id) for doc_id, text in batch.items()}
     with lsh.insertion_session() as session:
         for doc_id, minhash in minhashes.items():
-            session.insert(doc_id, minhash)
+            try:
+                session.insert(doc_id, minhash)
+            except ValueError as e:
+                logging.error(f"Error in inserting {doc_id}")
+                logging.error(e)
 
 
-def create_minhash_index(lsh: MinHashLSH, documents: dict[str, str], batch_size=1000):
-    keys = list(documents.keys())
+def create_minhash_index(lsh: MinHashLSH, documents: dict[str, str], batch_size=1000, redis=None):
+    doc_ids = list(documents.keys())
     for i in range(0, len(documents), batch_size):
-        batch = {k: documents[k] for k in keys[i:i+batch_size]}
-        process_batch(batch, lsh)
+        batch = {doc_id: documents[doc_id] for doc_id in doc_ids[i:i+batch_size]}
+        process_batch(batch, lsh, redis=redis)
     return lsh
 
 
@@ -73,13 +87,20 @@ def create_minhash_lsh(threshold=0.9, num_perm=128, storage_config=None):
     return MinHashLSH(threshold=threshold, num_perm=num_perm, storage_config=storage_config)
 
 
-def deduplicate_documents(documents: dict[str, str], lsh: MinHashLSH, n: int = 5, num_perm: int = 128):
-    uf = UnionFind(documents.keys())
+def deduplicate_documents(documents: dict[str, str], lsh: MinHashLSH, n: int = 5, num_perm: int = 128, redis=None):
+    uf = UnionFind(list(documents.keys()))
     for idx, doc in documents.items():
-        m = create_minhash(doc, n, num_perm)
-        result = lsh.query(m)
+        m = create_minhash(doc, n, num_perm, redis, idx)
+        try:
+            result = lsh.query(m)
+        except ValueError as e:
+            logging.error(f"Error in querying {idx}")
+            logging.error(e)
         for res in result:
-            uf.union(idx, res)
+            try:
+                uf.union(idx, res)
+            except KeyError:
+                logging.error(f"Error in union {idx} and {res}")
     clusters = uf.groups()
 
     deduplicated_docs = {}

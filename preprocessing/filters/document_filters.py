@@ -9,7 +9,7 @@ import hashlib
 import nltk
 
 
-from src.models.document import DocumentFromHTML
+from preprocessing.models.document import DocumentFromHTML
 
 
 class JSONHTMLLoader(Filter):
