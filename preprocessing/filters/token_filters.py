@@ -34,7 +34,6 @@ class RemoveOnewordNumber(TokenFilter):
     def __init__(self, date_pattern: re.Pattern = None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.date_pattern = self._date_pattern() if date_pattern is None else date_pattern
-        self.tagger = Tagger('-Owakati')
 
     def _date_pattern(self) -> str:
         """
@@ -46,8 +45,9 @@ class RemoveOnewordNumber(TokenFilter):
         return re.compile(r'((\d{2,4}([-年/])\d{1,2}([-月/])\d{1,2}日?)|(\d{2,4}([-年/])\d{1,2}([-月])?)|(\d{1,2}([-月/])\d{1,2}日?)).{0,8}$')
 
     def apply(self, token: Token) -> Token:
+        tagger = Tagger('-Owakati')
         text = token.text
-        word_count = len(self.tagger.parse(text).split())
+        word_count = len(tagger.parse(text).split())
         if word_count <= 1:
             token.is_rejected = True
         elif text.isdigit() or text.isdecimal() or text.isnumeric():

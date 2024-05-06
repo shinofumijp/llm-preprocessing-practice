@@ -87,7 +87,7 @@ def create_minhash_lsh(threshold=0.9, num_perm=128, storage_config=None):
     return MinHashLSH(threshold=threshold, num_perm=num_perm, storage_config=storage_config)
 
 
-def deduplicate_documents(documents: dict[str, str], lsh: MinHashLSH, n: int = 5, num_perm: int = 128, redis=None):
+def deduplicate_documents(documents: dict[str, str], lsh: MinHashLSH, n: int = 5, num_perm: int = 128, redis=None) -> list[str]:
     uf = UnionFind(list(documents.keys()))
     for idx, doc in documents.items():
         m = create_minhash(doc, n, num_perm, redis, idx)
@@ -108,4 +108,4 @@ def deduplicate_documents(documents: dict[str, str], lsh: MinHashLSH, n: int = 5
         k = max(cluster, key=lambda x: x)
         deduplicated_docs.update({k: documents[k]})
 
-    return deduplicated_docs
+    return deduplicated_docs.values()
