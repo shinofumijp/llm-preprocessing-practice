@@ -1,12 +1,26 @@
+import hojichar
 from hojichar import document_filters, Compose, Document
 
 import os
 import json
-
+import logging
+import multiprocessing
 
 from preprocessing.filters.token_filters import RemoveIncompleteSentence, RemoveHeadTailWhitespaceTokenizer, DiscardSpecialCharactersJa, RemoveOnewordNumber
 from preprocessing.filters.document_filters import DiscardAdultContentJa, DiscardBBSComments, DiscardDiscriminationContentJa, RemoveRepetition, NewLineSentenceTokenizer, MergeTokens
 from preprocessing.dedup.dedup import url_dedup
+import preprocessing.lib as lib
+
+
+NUM_WORKER = (multiprocessing.cpu_count() - 1)
+
+
+def __output_dir_after_url_dedup(base: str):
+    return os.path.join(base, "url_dedup")
+
+
+def __output_dir_after_filtering(base: str):
+    return os.path.join(base, "filtering")
 
 
 def __makedirs_for_output(input_file: str, output_base: str):
@@ -16,35 +30,39 @@ def __makedirs_for_output(input_file: str, output_base: str):
     return output_base_for_file
 
 
-def execute_filtering(file_lines: dict[str, list[str]], input_dir: str, output_base: str) -> list[str]:
-    stats, url_set = [], set()
-    for input_file, lines in file_lines.items():
+def execute_url_dedup(input_dir: str, output_base: str) -> str:
+    output_dir = __output_dir_after_url_dedup(output_base)
+    os.makedirs(output_dir, exist_ok=True)
+
+    for input_file in os.listdir(input_dir):
+        if not input_file.endswith(".jsonl"):
+            continue
+
         input_full_path = os.path.join(input_dir, input_file)
         output_base_for_input = __makedirs_for_output(input_full_path, output_base)
-        lines = url_dedup(lines, url_set, output_base_for_input, stats)
-        file_lines[input_file] = lines
+        url_dedup(input_file=input_full_path, output_base=output_base_for_input,
+                  output_file=os.path.join(output_dir, input_file))
 
-    stats = []
-    for input_file, lines in file_lines.items():
+    return output_dir
+
+
+def execute_filtering(input_dir: str, output_base: str) -> list[str]:
+    output_dir = __output_dir_after_filtering(output_base)
+    os.makedirs(output_dir, exist_ok=True)
+
+    for input_file in os.listdir(input_dir):
+        if not input_file.endswith(".jsonl"):
+            continue
+
         input_full_path = os.path.join(input_dir, input_file)
         output_base_for_input = __makedirs_for_output(input_full_path, output_base)
-        lines = process_filtering(lines, output_base_for_input, stats)
-        file_lines[input_file] = lines
+        process_filtering(input_file=input_full_path, output_base=output_base_for_input,
+                          output_file=os.path.join(output_dir, input_file))
 
-    with open(os.path.join(output_base, "result.filtering.jsonl"), "w") as writer:
-        for _, lines in file_lines.items():
-            for line in lines:
-                writer.write(line + "\n")
-
-    with open(os.path.join(output_base, "stat.filtering.jsonl"), "w") as writer:
-        for stat in stats:
-            writer.write(json.dumps(stat, ensure_ascii=False) + "\n")
-
-    return file_lines.items()
+    return output_dir
 
 
-def process_filtering(lines: list[str], output_base: str, stats: list[dict]):
-    remained_lines = []
+def process_filtering(input_file: str, output_base: str, output_file: str, debug: bool = False):
     cleaner = Compose([
         document_filters.JSONLoader(),
         document_filters.DocumentNormalizer(),
@@ -67,19 +85,20 @@ def process_filtering(lines: list[str], output_base: str, stats: list[dict]):
         document_filters.JSONDumper(dump_reason=True),
     ])
 
-    with open(os.path.join(output_base, "rejected.jsonl"), "w") as rejected:
-        with open(os.path.join(output_base, "result.jsonl"), "w") as writer:
-            for line in lines:
-                result = cleaner.apply(Document(line))
-                if result.is_rejected:
-                    rejected.write(result.text + "\n")
-                else:
-                    writer.write(result.text + "\n")
-                    remained_lines.append(result.text)
+    input_doc_iter = (Document(line) for line in lib.readlines(input_file))
+    num_jobs = os.environ.get("NUM_WORKER", NUM_WORKER)
+    with hojichar.Parallel(cleaner, num_jobs=num_jobs) as filter:
+        out_doc_iter = filter.imap_apply(input_doc_iter)
 
-    with open(os.path.join(output_base, "stat.jsonl"), "w") as writer:
-        writer.write(json.dumps(cleaner.statistics, ensure_ascii=False) + "\n")
+        with open(output_file, "w") as writer:
+            for result in out_doc_iter:
+                try:
+                    if not result.is_rejected:
+                        writer.write(result.text + "\n")
+                except Exception as e:
+                    print(f"Error processing document: {e}")
+                    logging.error(f"Error processing document: {e}")
 
-    stats.append(cleaner.statistics)
-
-    return remained_lines
+    if debug:
+        with open(os.path.join(output_base, "stat.jsonl"), "w") as writer:
+            writer.write(json.dumps(cleaner.statistics, ensure_ascii=False) + "\n")

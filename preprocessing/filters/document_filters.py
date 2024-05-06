@@ -1,5 +1,7 @@
 from hojichar import document_filters, Filter, Document, Token
 from fugashi import Tagger
+import redis
+from redis import ConnectionPool
 
 from os import PathLike
 from typing import Any, Union
@@ -7,6 +9,8 @@ import re
 import json
 import hashlib
 import nltk
+import random
+import string
 
 
 from preprocessing.models.document import DocumentFromHTML
@@ -34,15 +38,34 @@ class JSONHTMLLoader(Filter):
 
 
 class DeduplicationByURL(Filter):
-    def __init__(self, url_set: set[str] = set(), *args, **kwargs):
+    _pool = None
+
+    @classmethod
+    def __get_pool(cls, redis_host, redis_port, redis_db):
+        if cls._pool is None:
+            cls._pool = ConnectionPool(host=redis_host, port=redis_port, db=redis_db)
+        return cls._pool
+
+    def __init__(self, redis_host: str, redis_port: int, redis_db: int, basename: str = "", *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.url_set = url_set
+        self.basename: str = basename if basename else ''.join(random.choice(string.ascii_lowercase)
+                                                               for _ in range(11))
+        self.redis_client = None
+        self.redis_host = redis_host
+        self.redis_port = redis_port
+        self.redis_db = redis_db
+
+    def __connect(self):
+        if self.redis_client is None:
+            pool = self.__get_pool(self.redis_host, self.redis_port, self.redis_db)
+            self.redis_client = redis.Redis(connection_pool=pool)
 
     def apply(self, document: DocumentFromHTML) -> DocumentFromHTML:
-        if document.url in self.url_set:
+        self.__connect()
+        if self.redis_client.get(self.basename + document.url):
             document.is_rejected = True
         else:
-            self.url_set.add(document.url)
+            self.redis_client.set(self.basename + document.url, "1")
         return document
 
 
@@ -54,7 +77,6 @@ class DiscardBBSComments(Filter):
         self.keyword_pat = re.compile(
             r"\d{4}[年\.\-\/][\ ]*\d{1,2}[月\.\-\/][\ ]*\d{1,2}[日]*|コメント|SOLD OUT|レビュー|投稿|ページ|\([月火水木金土日]\)|質問|\d+話|楽天市場|-"  # noqa
         )
-        self.tagger = Tagger('-Owakati')
 
     def apply(self, doc: Document) -> Document:
         """
@@ -64,8 +86,9 @@ class DiscardBBSComments(Filter):
         >>> DiscardBBSComments().apply(Document("鏡餅")).is_rejected
         False
         """
+        tagger = Tagger('-Owakati')
         bbs_factor = self.keyword_pat.findall(doc.text)
-        total_words = len(self.tagger.parse(doc.text).split())
+        total_words = len(tagger.parse(doc.text).split())
         if total_words > 0 and len(bbs_factor) / total_words > self.threshold:
             doc.is_rejected = True
         return doc
@@ -76,12 +99,12 @@ class RemoveRepetition(Filter):
         super().__init__(*args, **kwargs)
         self.duplicate_line_fraction = 0.5
         self.duplicate_line_character_fraction = 0.5
-        self.tagger = Tagger('-Owakati')
 
     def _hash_text(self, text: str) -> str:
         return hashlib.md5(text.encode("utf-8")).hexdigest()
 
     def apply(self, document: Document) -> Document:
+        tagger = Tagger('-Owakati')
         if not document.text:
             return document
 
@@ -115,7 +138,7 @@ class RemoveRepetition(Filter):
             (4, 0.16),
         ]
         for ngram, threshold in top_ngram_character_fractions:
-            word_list = self.tagger.parse(document.text).split()
+            word_list = tagger.parse(document.text).split()
             bgs = nltk.ngrams(word_list, ngram)
             fdist = nltk.FreqDist(bgs)
             for word_list, repeat in fdist.items():
@@ -134,7 +157,7 @@ class RemoveRepetition(Filter):
         ]
         for ngram, threshold in duplicate_ngram_character_fractions:
             fdist = {}
-            word_list = self.tagger.parse(document.text).split()
+            word_list = tagger.parse(document.text).split()
             mark = [0] * len(word_list)
             for i in range(len(word_list) - ngram + 1):
                 bag = tuple(word_list[i: i + ngram])
@@ -223,13 +246,13 @@ class DiscardAdultContentJa(document_filters.NgWordsFilterJa):
     ) -> None:
         super().__init__(dict_path, *args, **kwargs)
         self.threshold = threshold
-        self.tagger = Tagger('-Owakati')
 
     def apply(self, doc: Document) -> Document:
+        tagger = Tagger('-Owakati')
         adult_keywords_pattern = self.keyword_pat
         matches = re.findall(adult_keywords_pattern, doc.text)
         adult_content_count = len(matches)
-        total_words_count = len(self.tagger.parse(doc.text).split())
+        total_words_count = len(tagger.parse(doc.text).split())
 
         if total_words_count > 0 and adult_content_count / total_words_count > self.threshold:
             doc.is_rejected = True
@@ -247,13 +270,13 @@ class DiscardDiscriminationContentJa(document_filters.NgWordsFilterJa):
     ) -> None:
         super().__init__(dict_path, *args, **kwargs)
         self.threshold = threshold
-        self.tagger = Tagger('-Owakati')
 
     def apply(self, doc: Document) -> Document:
+        tagger = Tagger('-Owakati')
         adult_keywords_pattern = self.keyword_pat
         matches = re.findall(adult_keywords_pattern, doc.text)
         discrimination_content_count = len(matches)
-        total_words_count = len(self.tagger.parse(doc.text).split())
+        total_words_count = len(tagger.parse(doc.text).split())
 
         if total_words_count > 0 and discrimination_content_count / total_words_count > self.threshold:
             doc.is_rejected = True
