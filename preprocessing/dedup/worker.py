@@ -3,7 +3,7 @@ import os
 import subprocess
 import uuid
 import json
-import logging
+from logging import getLogger, basicConfig, INFO
 
 import redis
 
@@ -19,12 +19,14 @@ def __readlines(input_file: str):
             yield line
 
 
-def evoke_worker(worker_id: int, input_dir: str, basename: str) -> None:
-    subprocess.Popen([os.path.join(SCRIPT_PATH, "throw_job.sh"), ROOT_PATH, str(worker_id), input_dir, basename])
+def evoke_worker(worker_id: int, input_dir: str, log_dir: str, basename: str) -> None:
+    subprocess.Popen([os.path.join(SCRIPT_PATH, "throw_job.sh"), ROOT_PATH,
+                     str(worker_id), input_dir, log_dir, basename])
 
 
-def run(worker_id: int, input_dir: str, basename: str):
-    logging.info(f"Worker {worker_id} started")
+def run(worker_id: int, input_dir: str, basename: str, *, logger=None):
+    logger = logger or getLogger(__name__)
+    logger.info(f"Worker {worker_id} started")
     redis_host = os.environ.get("REDIS_HOST", "localhost")
     redis_port = os.environ.get("REDIS_PORT", 6379)
     redis_db = os.environ.get("REDIS_DB", 0)
@@ -36,9 +38,9 @@ def run(worker_id: int, input_dir: str, basename: str):
         try:
             with r.lock("lock.dedup_files.before_processing", blocking_timeout=10):
                 filename = r.lpop("dedup_files.before_processing")
-                logging.info(f"Worker {worker_id} processing {filename}")
+                logger.info(f"Worker {worker_id} processing {filename}")
         except redis.exceptions.LockError:
-            logging.info(f"Worker {worker_id} failed to acquire lock")
+            logger.info(f"Worker {worker_id} failed to acquire lock")
             continue
 
         if filename is None:
@@ -67,10 +69,17 @@ def main():
     parser.add_argument('--worker_id', type=int, help='The worker id', required=True)
     parser.add_argument('--input_dir', type=str,
                         help='The input directory containing documents to process', required=True)
+    parser.add_argument('--log_dir', type=str,
+                        help='The directory where the logs will be stored', required=True)
     parser.add_argument('--basename', type=str,
                         help='The basename to use for the redis keys', required=True)
     args = parser.parse_args()
-    run(args.worker_id, args.input_dir, args.basename)
+
+    os.makedirs(args.log_dir, exist_ok=True)
+    logger = getLogger(__name__)
+    basicConfig(filename=os.path.join(args.log_dir, f"worker_{args.worker_id}.log"), level=INFO)
+
+    run(worker_id=args.worker_id, input_dir=args.input_dir, basename=args.basename, logger=logger)
 
 
 if __name__ == "__main__":
