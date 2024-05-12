@@ -3,9 +3,10 @@ from hojichar import document_filters, Compose, Document
 
 import os
 import json
-import logging
 import multiprocessing
 
+
+from preprocessing.lib import Logger
 from preprocessing.filters.token_filters import RemoveIncompleteSentence, RemoveHeadTailWhitespaceTokenizer, DiscardSpecialCharactersJa, RemoveOnewordNumber
 from preprocessing.filters.document_filters import DiscardAdultContentJa, DiscardBBSComments, DiscardDiscriminationContentJa, RemoveRepetition, NewLineSentenceTokenizer, MergeTokens
 from preprocessing.dedup.dedup import url_dedup
@@ -30,7 +31,9 @@ def __makedirs_for_output(input_file: str, output_base: str):
     return output_base_for_file
 
 
-def execute_url_dedup(input_dir: str, output_base: str) -> str:
+def execute_url_dedup(input_dir: str, output_base: str, *, logger=None) -> str:
+    logger = logger or Logger.get_logger(__name__, logdir=os.path.join(output_base, "log"))
+
     output_dir = __output_dir_after_url_dedup(output_base)
     os.makedirs(output_dir, exist_ok=True)
 
@@ -41,12 +44,15 @@ def execute_url_dedup(input_dir: str, output_base: str) -> str:
         input_full_path = os.path.join(input_dir, input_file)
         output_base_for_input = __makedirs_for_output(input_full_path, output_base)
         url_dedup(input_file=input_full_path, output_base=output_base_for_input,
-                  output_file=os.path.join(output_dir, input_file))
+                  output_file=os.path.join(output_dir, input_file),
+                  logger=logger)
 
     return output_dir
 
 
-def execute_filtering(input_dir: str, output_base: str) -> list[str]:
+def execute_filtering(input_dir: str, output_base: str, *, logger=None) -> list[str]:
+    logger = logger or Logger.get_logger(__name__, logdir=os.path.join(output_base, "log"))
+
     output_dir = __output_dir_after_filtering(output_base)
     os.makedirs(output_dir, exist_ok=True)
 
@@ -57,12 +63,13 @@ def execute_filtering(input_dir: str, output_base: str) -> list[str]:
         input_full_path = os.path.join(input_dir, input_file)
         output_base_for_input = __makedirs_for_output(input_full_path, output_base)
         process_filtering(input_file=input_full_path, output_base=output_base_for_input,
-                          output_file=os.path.join(output_dir, input_file))
+                          output_file=os.path.join(output_dir, input_file), logger=logger)
 
     return output_dir
 
 
-def process_filtering(input_file: str, output_base: str, output_file: str, debug: bool = False):
+def process_filtering(input_file: str, output_base: str, output_file: str, debug: bool = False, *, logger=None):
+    logger = logger or Logger.get_logger(__name__, logdir=os.path.join(output_base, "log"))
     cleaner = Compose([
         document_filters.JSONLoader(),
         document_filters.DocumentNormalizer(),
@@ -96,8 +103,7 @@ def process_filtering(input_file: str, output_base: str, output_file: str, debug
                     if not result.is_rejected:
                         writer.write(result.text + "\n")
                 except Exception as e:
-                    print(f"Error processing document: {e}")
-                    logging.error(f"Error processing document: {e}")
+                    logger.error(f"Error processing document: {e}")
 
     if debug:
         with open(os.path.join(output_base, "stat.jsonl"), "w") as writer:
