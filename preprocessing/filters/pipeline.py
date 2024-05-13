@@ -24,13 +24,6 @@ def __output_dir_after_filtering(base: str):
     return os.path.join(base, "filtering")
 
 
-def __makedirs_for_output(input_file: str, output_base: str):
-    input_file_prefix = os.path.splitext(os.path.basename(input_file))[0]
-    output_base_for_file: str = os.path.join(output_base, input_file_prefix)
-    os.makedirs(output_base_for_file, exist_ok=True)
-    return output_base_for_file
-
-
 def execute_url_dedup(input_dir: str, output_base: str, *, logger=None) -> str:
     logger = logger or Logger.get_logger(__name__, logdir=os.path.join(output_base, "log"))
 
@@ -42,8 +35,7 @@ def execute_url_dedup(input_dir: str, output_base: str, *, logger=None) -> str:
             continue
 
         input_full_path = os.path.join(input_dir, input_file)
-        output_base_for_input = __makedirs_for_output(input_full_path, output_base)
-        url_dedup(input_file=input_full_path, output_base=output_base_for_input,
+        url_dedup(input_file=input_full_path, output_base=output_base,
                   output_file=os.path.join(output_dir, input_file),
                   logger=logger)
 
@@ -61,8 +53,7 @@ def execute_filtering(input_dir: str, output_base: str, *, logger=None) -> list[
             continue
 
         input_full_path = os.path.join(input_dir, input_file)
-        output_base_for_input = __makedirs_for_output(input_full_path, output_base)
-        process_filtering(input_file=input_full_path, output_base=output_base_for_input,
+        process_filtering(input_file=input_full_path, output_base=output_base,
                           output_file=os.path.join(output_dir, input_file), logger=logger)
 
     return output_dir
@@ -106,5 +97,7 @@ def process_filtering(input_file: str, output_base: str, output_file: str, debug
                     logger.error(f"Error processing document: {e}")
 
     if debug:
-        with open(os.path.join(output_base, "stat.jsonl"), "w") as writer:
+        os.makedirs(os.path.join(output_base, "stat", "filtering"), exist_ok=True)
+        input_file_prefix = os.path.splitext(os.path.basename(input_file))[0]
+        with open(os.path.join(output_base, f"{input_file_prefix}.jsonl"), "w") as writer:
             writer.write(json.dumps(cleaner.statistics, ensure_ascii=False) + "\n")

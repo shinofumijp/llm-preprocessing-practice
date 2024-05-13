@@ -124,5 +124,7 @@ def url_dedup(input_file: str, output_base: str, output_file: str, debug: bool =
                     logger.error(f"Error processing document: {e}")
 
     if debug:
-        with open(os.path.join(output_base, "stat.url_dedup.jsonl"), "w") as writer:
+        os.makedirs(os.path.join(output_base, "stat", "url_dedup"), exist_ok=True)
+        input_file_prefix = os.path.splitext(os.path.basename(input_file))[0]
+        with open(os.path.join(output_base, f"{input_file_prefix}.jsonl"), "w") as writer:
             writer.write(json.dumps(cleaner.statistics, ensure_ascii=False) + "\n")
