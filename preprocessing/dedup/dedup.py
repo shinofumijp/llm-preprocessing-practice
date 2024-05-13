@@ -18,7 +18,7 @@ from multiprocessing import Pool, cpu_count
 import preprocessing.lib as lib
 
 
-NUM_WORKER = (multiprocessing.cpu_count() - 1)
+NUM_WORKER = (multiprocessing.cpu_count() - 2)
 
 
 def exec_deduplication(output_base: str, input_dir: str, basename: str = "", *, logger=None) -> list[str]:

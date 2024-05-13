@@ -13,7 +13,7 @@ from preprocessing.dedup.dedup import url_dedup
 import preprocessing.lib as lib
 
 
-NUM_WORKER = (multiprocessing.cpu_count() - 1)
+NUM_WORKER = (multiprocessing.cpu_count() - 2)
 
 
 def __output_dir_after_url_dedup(base: str):
