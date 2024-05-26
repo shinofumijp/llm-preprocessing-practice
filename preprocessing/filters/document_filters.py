@@ -11,9 +11,13 @@ import hashlib
 import nltk
 import random
 import string
+import pathlib
 
 
 from preprocessing.models.document import DocumentFromHTML
+from preprocessing import filters
+
+DICT_PATH = pathlib.Path(filters.__path__[0]) / "dict"
 
 
 class JSONHTMLLoader(Filter):
@@ -282,3 +286,25 @@ class DiscardDiscriminationContentJa(document_filters.NgWordsFilterJa):
             doc.is_rejected = True
 
         return doc
+
+
+class DiscardMedicalHistory(document_filters.NgWordsFilterJa):
+    def __init__(
+        self,
+        dict_path: Union[str, PathLike] = DICT_PATH / "medical_history_ja.txt",
+        ignore_confused: bool = False,
+        *args: Any,
+        **kwargs: Any,
+    ) -> None:
+        super().__init__(dict_path=dict_path, ignore_confused=ignore_confused, *args, **kwargs)
+
+
+class DiscardCriminalHistory(document_filters.NgWordsFilterJa):
+    def __init__(
+        self,
+        dict_path: Union[str, PathLike] = DICT_PATH / "medical_history_ja.txt",
+        ignore_confused: bool = False,
+        *args: Any,
+        **kwargs: Any,
+    ) -> None:
+        super().__init__(dict_path=dict_path, ignore_confused=ignore_confused, *args, **kwargs)
