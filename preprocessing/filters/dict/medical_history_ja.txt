@@ -1,200 +1,738 @@
-がん
-糖尿病
-高血圧
-心臓病
-脳卒中
-精神疾患
-うつ病
-統合失調症
-パニック障害
-アルツハイマー病
-パーキンソン病
-HIV/AIDS
-肝炎
-結核
-腎臓病
-肝臓病
-アレルギー
-自閉症
-ADHD
-摂食障害
-不妊症
-てんかん
-慢性疲労症候群
-ぜんそく
-リウマチ
-狭心症
-心筋梗塞
-性感染症
-クローン病
-潰瘍性大腸炎
-白血病
-悪性リンパ腫
-多発性骨髄腫
-骨肉腫
-前立腺癌
-乳がん
-卵巣がん
-子宮がん
-大腸がん
-肺がん
-膵臓がん
-皮膚がん
-甲状腺がん
-喉頭がん
-腎臓がん
-精巣がん
-膀胱がん
-胃がん
-肝臓がん
-食道がん
-喘息
-慢性閉塞性肺疾患 (COPD)
-気管支炎
-肺気腫
-間質性肺炎
-気胸
-サルコイドーシス
-結核性胸膜炎
-乳腺炎
-鬱血性心不全
-心臓弁膜症
-不整脈
-心房細動
-心室細動
-心筋症
-心膜炎
-心筋炎
-狭心症
-冠動脈疾患
-動脈硬化
-高コレステロール血症
-メタボリックシンドローム
-高尿酸血症
-痛風
-肥満
-貧血
-鉄欠乏性貧血
-再生不良性貧血
-溶血性貧血
-サラセミア
-血友病
-血小板減少症
-多血症
-血栓症
-出血性素因
-ストレス障害
-トラウマ後ストレス障害 (PTSD)
-双極性障害
-気分変調症
-境界性人格障害
-強迫性障害
-解離性障害
-社会不安障害
-依存症
-アルコール依存症
-薬物依存症
-ギャンブル依存症
-摂食障害
-神経性無食欲症
-神経性大食症
-咽頭炎
-扁桃炎
-中耳炎
-眼瞼炎
-白内障
-緑内障
-網膜剥離
-黄斑変性
-結膜炎
-角膜炎
-ぶどう膜炎
-視神経炎
-視神経萎縮
-斜視
-視力障害
-難聴
-耳鳴り
-メニエール病
-前庭神経炎
-顔面神経麻痺
-頸椎症
-腰椎症
-椎間板ヘルニア
-坐骨神経痛
-脊柱管狭窄症
-関節リウマチ
-変形性関節症
-痛風関節炎
-骨粗鬆症
-骨折
-脱臼
-筋ジストロフィー
-筋萎縮性側索硬化症 (ALS)
-重症筋無力症
-筋肉痛
-筋肉炎
-筋繊維腫症
-慢性膵炎
-急性膵炎
-胆石症
-胆嚢炎
-膵臓のう腫
-胆管炎
-胆道閉鎖症
-肝硬変
-脂肪肝
-肝炎 (A型、B型、C型)
-ウィルソン病
-ヘモクロマトーシス
-自己免疫性肝炎
-原発性胆汁性胆管炎
-胆道閉鎖症
-クローン病
-潰瘍性大腸炎
-過敏性腸症候群 (IBS)
-腸閉塞
-腸重積
-腸穿孔
-腸管癒着
-食道裂孔ヘルニア
-胃潰瘍
-十二指腸潰瘍
-腹膜炎
-膵臓炎
-乳腺症
-乳腺線維腫
-子宮筋腫
-子宮内膜症
-卵巣嚢腫
-卵巣捻転
-子宮脱
-子宮内膜癌
-精索静脈瘤
-前立腺肥大症
-性感染症 (クラミジア、淋病、梅毒)
-尿路感染症
-尿道炎
-腎盂腎炎
-膀胱炎
-尿路結石
-腎不全
-尿失禁
-膀胱過活動症
-ネフローゼ症候群
-多発性嚢胞腎
-肝膿瘍
-肝膿瘍性脳症
-膿胸
-肺膿瘍
-腹水
-関節痛
-側頭動脈炎
-巨細胞動脈炎
-多発性筋炎
+上顎洞癌
+von Gierke病
+pseudobulbar palsy
+浮腫
+疣贅
+aortic stenosis
+Wolf-Parkinson-White syndrome
 多発性硬化症
-筋萎縮症
-筋強直性ジストロフィー
-末梢神経障害
-末梢動脈疾患
+Alzheimer's Disease
+良性前立腺肥大症
+十二指腸潰瘍
+癤
+黒子
+高血圧症
+齲歯
+ギランバレー症候群
+大腿骨頭辷り症
+脳貧血
+大理石様皮斑
+前立腺肥大症
+痛風
+dermatimyositis
+酸欠
+ハンセン氏病
+豆腐の粕
+F中
+シップル症候群
+cerebrovascular disordercerebral vascular disease
+外反母趾
+ギラン-バレ症候群
+腎芽細胞腫
+三日麻疹
+気管支喘息
+橋本病
+スティッフパーソン症候群
+フルンケル
+化学物質過敏症
+cerebral palsy
+メタボリックシンドローム
+骨形成不全症
+年寄り疣
+虚血性心疾患,心筋梗塞,狭心症
+鶏眼
+Infective endocarditis
+Wallenberg症候群
+Kearns-Sayre症候群
+Liddle症候群
+腎芽腫
+subacute sclerosing panencephalitis
+持続勃起症
+multiple sclerosis
+Goodpasture症候群
+白癜
+特発性血小板減少性紫斑病
+acute promyelocytic leukemia
+伝染性軟属腫
+myasthenia gravis
+鱗屑
+閉塞性動脈硬化症
+ideopathic cardiomyopathy
+肝斑
+色素性母斑
+クールー病
+壊死性腸炎
+鳥インフルエンザ
+小児がん
+Boerhaave症候群
+卵巣嚢腫
+mitral(valve) stenosis
+Niemann-Pick病
+変形性関節症
+急性灰白髄炎
+再生不良性貧血
+ventricular septal defect
+idiopathic thrombocytopenic purpura
+クラッシュ・シンドローム
+精神分裂病
+hyperparathyroidism
+大動脈弁閉鎖不全
+自律神経失調症
+急性リンパ性白血病
+若年性骨粗鬆症
+sexual transmitted disease
+スティフ・マン症候群
+Déjérine-Sottas病
+特発性大腿骨頭壊死症
+acute myocardial infarciton
+mucocutaneus lymphnode syndrome
+目糞
+動脈硬化症
+軟繊維腫
+Basedow病
+先天性甲状腺機能低下症
+myocardial infarction
+染色体異常
+糖原病II型
+肝レンズ核変性症
+メチル水銀中毒症
+ダブリューピーダブリュー症候群
+十円禿
+レッシュ・ナイハン症候群
+aortic stenoinsufficiency
+Ossification of the posterior longitudinal ligament
+クレチン症
+ランチメイト症候群
+クラッベ病
+中風
+amyotropic lateral screlosis
+acute renal failure
+胼
+性感染症
+三尖弁狭窄症
+膀胱結石
+夜盲症
+食欲不振
+ウィルソン病
+複雑骨折
+Mallory-Weiss症候群
+三尖弁閉鎖不全症
+congestive heart failure
+全身性ループスエリテマトーデス
+カルマン症候群
+skin tag
+ディジョージ症候群
+歯垢
+進行性核上性麻痺
+Freidreich症候群
+躁鬱病
+結節性動脈周囲炎
+アルツハイマー
+Parkinson's Disease
+ダウン症候群
+トリインフルエンザ
+高所恐怖症
+完全右脚ブロック
+subarachnoid hemorrhage
+円形脱毛症
+下痢
+心房細動
+脂漏性角化症
+furuncle
+コーリ病
+プランマー病
+tuberculosis
+脳性麻痺
+仮性球麻痺
+酸素欠乏症
+liver cirrhosis
+体部白癬
+Arnold-Chiari奇形
+亜急性硬化性全脳炎
+汗疹
+ポンペ病
+aortic insufficiency
+abdominal aorthic aneurysm
+脳血管障害にあたる
+multiple myeloma
+Werdnig-Hoffmann病
+ボツリヌス症
+progressive muscular dystrophy
+Laurence-Moon-Biedl症候群
+尋常性白斑
+アテローム
+不整脈
+胃巨大皺襞症
+風疹
+完全房室ブロック
+好酸球性肉芽腫
+進行性全身性硬化症
+癩病
+ヤコブ病
+鬱血性心不全
+大動脈炎症候群
+膠原病
+ターナー症候群
+chronic fatigue syndrome
+眼皮膚白皮症
+complete atroioventiricular block
+rheumatic fever
+グランツマンの血小板無力症
+副甲状腺機能亢進症
+狂牛病
+hypertension→高血圧
+筋ジストロフィー
+WPW症候群
+霜焼
+benign prostatic hypertrophy
+盲腸炎
+糖原病I型
+関節リウマチ
+若禿
+ライム病
+読みが異なる
+Churg-Strauss症候群
+強皮症
+結節性硬化症
+tricuspid insufficiency
+皮膚筋炎
+複雑骨折は医学的には別の意味
+高次脳機能障害
+Charcot-Marie-Tooth病
+シャルコー-マリー-トゥース病
+Addison病
+脳血管障害
 慢性腎不全
+カルブンケル
+ホルモン異常
+hyperlipidemia
+juvenile rheumatoid arthritis
+五十肩
+風邪
+高脂血症
+慢性原発性副腎皮質機能低下症
+ケーンズ-セイヤー症候群
+僧帽弁閉鎖不全症
+後縦靱帯硬化症
+肥満
+慢性リンパ性白血病
+冠動脈疾患
+コレラ
+アレルギー性紫斑病
+水俣病
+血小板無力症
+特発性肥厚性大動脈弁下狭窄症
+グッドパスチャー症候群
+thrombotic theombocytopenic purpura
+腸管出血性大腸菌感染症
+吐気
+scleroderma
+咳嗽
+ギランバレ症候群
+胼胝腫
+統合失調症
+atrial fibrillation
+頭痛
+stiff-person症候群
+御出来
+糖原病VII型
+毛巣洞
+熱傷
+腎機能障害
+シーハン症候群
+インフルエンザ
+ネフローゼ症候群
+マラリア
+アントン症候群
+貧血は医学的には別の意
+Di George症候群
+魚鱗癬
+落屑
+神経性進行性筋萎縮症
+ヴェルドニヒ-ホフマン病
+大動脈弁狭窄及び閉鎖不全症
+クリューヴァー・ビューシー症候群
+necrotizing enterocolitis
+クローン病
+心身症
+全身硬直症候群
+水疣
+patent ductus arteriosus
+虫歯
+漏斗胸
+自然気胸
+先天性ガラクトセルブロシダーゼ欠損症
+氷食症
+combined valvular disease
+物貰い
+花粉症
+Blount病
+ギラン-バレー症候群
+常染色体劣性多発性嚢胞腎
+子宮筋腫
+接触性皮膚炎
+動脈管開存症
+コン症候群
+ムコ多糖症
+肝炎
+熱中症
+subacute myelo-optico-neuropathy
+頻脈
+アンダーセン病
+Mobius syndrome
+床擦れ
+Scheuermann病
+食中毒
+全身性エリテマトーデス
+腋臭
+褥瘡
+クーゲルベルク-ヴェランダー病
+結核
+脊髄性進行性筋萎縮症I型
+Sipple症候群
+ホジキン病
+糖原病IV型
+クッシング症候群
+血友病
+シャルコー・マリー・トゥース病
+突発性難聴
+インポテンス
+痘瘡
+アンジェルマン症候群
+肺炎
+clavus
+Bartter症候群
+食思不振
+ギラン・バレー症候群
+systemic screlosis
+systemic lupus erythmatosus
+徐脈
+Olivopontinecelebellar atrophy
+若年性関節リウマチ
+熱射病
+Guillain-Barre syndrome
+非A非B型肝炎
+裂肛
+metabolic syndrome
+目脂
+齲蝕
+acute myelogenous leukemia
+臍ヘルニア
+不眠症
+伝染性耳下腺炎
+爪白癬
+Hodgkin's disease
+ギラン・バレ症候群
+上腕骨外側上顆炎
+progressive systemic sclerosis
+進行性肥厚性間質ニューロパチー
+アルツハイマー病
+duodenal ulcer
+頭部白癬
+血栓性血小板減少性紫斑病
+鳥目
+外傷後健忘
+リドル症候群
+periarteritis nodosa
+多発性骨髄腫
+アディソン病
+Medial Tibial Stress Syndrome
+アレルギー性肉芽腫性血管炎
+遺伝性運動感覚性ニューロパチーI型・II型
+黒痣
+注意欠陥・多動性障害
+伝染性膿痂疹
+chronic obstructive lung disease
+寝小便
+ローレンス-ムーン-ビードル症候群
+偽性低アルドステロン症II型
+progressive supranuclear palsy
+鮫肌
+生活習慣病
+マッカードル病
+顎関節脱臼
+急性糸球体腎炎
+多動性障害(HD)Hyperactivity Disorder
+はたけ
+癲癇
+Banti症候群
+diabetes mellitus
+A型肝炎
+Plunmmer病
+Chiai奇形II型
+Calvé病
+出臍
+ウィルムス腫瘍
+carbuncle
+性同一性障害
+ideopathic hypertropic subaortic stenosis
+慢性閉塞性肺疾患
+成人病
+下顎骨骨折
+更年期障害
+psychosomatic disease
+盲腸は医学的には別の意
+白癬菌症
+足白癬
+Cushing症候群
+osteogenesis imperfecta
+マールブルグ熱
+chronic lympocytic leukemia
+ぢ）
+メニエール症候群
+濾胞性歯嚢胞
+心室性期外収縮
+連合弁膜症
+猫鳴き症候群
+Krabbe病
+ナルコレプシー
+認知症
+とびひ
+注意欠陥障害(AD)Attention Deficit
+垂井病
+Huntington病
+たんがさー/つづらご/たづ
+盲腸
+マルファン症候群
+疣痔
+chronic myelogenous leukemia
+心筋梗塞
+脂肪肝
+顎関節症
+狂犬病
+御寝小
+ルイ・バール症候群
+日本脳炎
+bovine spongiform encephalopathy
+感冒
+hepatitis C
+火傷
+急性前骨髄性白血病
+好酸球性多発血管炎性肉芽腫症
+伝染性紅斑
+ボールハーフェ症候群
+ペスト
+ウィリアムズ症候群
+シュミット症候群
+ADPKD
+arteriosclerosis obliterans
+sentinel skin tag
+心房中隔欠損症
+ラッサ熱
+肺血栓塞栓症
+インポテンツ
+stiff person syndrome,stiff man syndrome
+虚血性心疾患
+一過性脳虚血発作
+Old Myocardial Infarction
+多発性内分泌腫瘍症I型
+蕁麻疹
+Huntington舞踏病
+脳出血
+Wilms腫瘍
+フリードライヒ症候群
+麦粒腫
+急性骨髄性白血病
+transient cerebral ischemic attack
+oculocutaneous albinism
+病気
+Kugelberg-Welander病
+ventricular premature contraction
+常染色体性優性多発性嚢胞腎
+先天性白皮症
+Kallmann症候群
+B型肝炎
+牛海綿状脳症
+ワレンベルク症候群
+チャーグ-ストラウス症候群
+延髄外側症候群
+腋臭症
+パーキンソン症候群
+黒死病
+クラインフェルター症候群
+empty sella症候群
+脊髄性進行性筋萎縮症III型
+高安病
+リウマチ熱
+日射病
+脈なし病
+Andersen病
+Gaucher病
+intraventricular hemorrhage
+Albright's遺伝性骨異栄養症
+cerebral hemorrhage
+爪水虫
+ARPKD
+悪性腫瘍
+バーター症候群
+全身性強皮症
+Spinal Muscular Atrophy
+Lyme病
+大動脈弁狭窄症
+歯槽膿漏
+cerebral infarction
+Cori病
+慢性甲状腺炎
+毛細血管拡張性失調症
+急性灰白質髄炎
+下垂体腫瘍性糖質ホルモン過剰症
+ぜに田虫
+痂皮
+クロイツフェルト・ヤコブ病
+歯糞
+四十肩
+重症筋無力症
+アレルギー性結膜炎
+特発性心筋症
+バセドウ病
+腰部脊柱管狭窄症
+Schönlein-Henoch紫斑病
+雀卵斑
+帯下
+脳梗塞と脳出血を明確にしない概念
+先天性グルコセルブロシダーゼ欠損症
+死の四重奏
+糖尿病
+痔
+urinary tract infection
+パーキンソン病
+大腿骨頭骨端線離開
+腰痛
+靤皰
+食道癌
+C型肝炎
+Fabry病
+ショイエルマン病
+関節炎
+慢性疲労症候群
+ザー
+常染色体優性多発性嚢胞腎
+流感
+subacute bacterial endocarditisSBE
+急性炎症性脱髄性多発神経根炎
+陳旧性心筋梗塞
+ひだこ
+帯状疱疹
+Severe Acute Respiratory Syndrome
+Wilson病
+亜急性細菌性心内膜炎
+お多福風邪
+狭心症
+complete right bundle branch block
+僧帽弁狭窄症
+悪露
+呼吸器疾患
+Erection Disorder
+エイズ
+蜘蛛膜下出血
+坐骨神経痛
+甲状腺刺激ホルモン受容体刺激型自己抗体性甲状腺機能亢進症
+男性恐怖症
+Gordon症候群
+acute bacterial endocarditis
+下物
+巨大肥厚性胃炎
+ステロイド皮膚症
+脊髄性筋萎縮症
+しらくも
+洞不全症候群
+オールブライト遺伝性骨異栄養症
+O157
+hepatitis B
+atrial septal defect
+白血病
+有機水銀中毒症
+ムコ多糖代謝異常症
+血液のガン
+脳梗塞
+粉砕骨折
+脳室内出血
+見張り疣
+炭疽症
+骨粗鬆症
+後天性免疫不全症候群
+マロリー・ワイス症候群
+coronary heart disease
+貧血
+喘息
+疣
+自閉症
+Conn症候群
+麻痺
+ブルヌヴィーユ-プリングル病
+ランチメート症候群
+Sheehan症候群
+水疱瘡
+ふけ
+Livedo reticularis with summer ulceration
+水頭症
+ヘルニア
+肝硬変
+脳脊髄液減少症
+acquired immunodeficiency syndrome
+切れ痔
+筋萎縮性側索硬化症
+突発性門脈圧亢進症
+重症急性呼吸器症候群
+凍瘡
+Tarui病
+Niemann-Pick disease
+スティッフマン症候群
+双極性障害
+慢性骨髄性白血病
+川崎病
+Sandhoff病
+ワイル病
+急性心筋梗塞
+糖原病V型
+aortic regurgitation
+夜尿症
+単純性粃糠疹
+突発性食道破裂
+痔瘻・内痔核など肛門部疾患の総称であり
+Schmidt症候群
+hepatitis A
+ブルセラ症
+ニーマン-ピック病
+常染色体性劣性多発性嚢胞腎
+ハンチントン病
+脳炎
+間欠性跛行
+Tay-Sachs病
+全身強直症候群
+挫滅症候群
+急性細菌性心内膜炎
+尋常性座瘡
+壮年性脱毛症
+糖原病III型
+ブラウント病
+Anton症候群
+感染性心内膜炎
+代謝症候群
+リベド血管炎
+肝細胞癌
+脊柱管狭窄症
+tricuspid stenosis , tuberous sclerosis
+Chronic renal failure
+acute lymphcitic leukemia
+胝
+Wermer症候群
+atute glomerulonephritis
+天然痘
+エコノミークラス症候群
+多発性嚢胞腎
+歯周病
+サンドホフ病
+瘡蓋
+ポリオ
+新生児一過性多呼吸
+低血圧
+thromboangitis obliterans
+尿路感染症
+咬耗症
+慢性進行性外眼筋麻痺
+osteoarthritis
+痙攣
+ゴーシェ病
+りんご病
+Alport症候群
+アルビノ
+歯根嚢胞
+脳溢血
+Cushing病
+シンスプリント
+腓骨筋萎縮症
+シンドロームX
+メニトリエ病
+バンチ症候群
+股部白癬
+小児急性熱性皮膚粘膜リンパ節症候群
+albinism
+咳
+sick sinus syndrome
+多発性内分泌腫瘍症IIA型
+陰金田虫
+ハンセン病
+老人性疣贅
+stiff-man症候群
+ファブリ病
+フォン・ギールケ病
+単一の疾患ではない
+黄疸出血性レプトスピラ症
+Louis-Bar症候群
+こしけ）
+Weil病
+キアリ奇形II型
+悪心
+ischemic heart disease
+悪寒
+白子
+ハンチントン舞踏病
+粉瘤
+テイ＝サックス病
+ワーマー症候群
+水虫
+潰瘍性大腸炎
+急性アルコール中毒
+ファンコーニ貧血
+雀斑
+神経因性膀胱機能障害
+MacArdle病
+オリーブ橋小脳萎縮症
+mental retardation
+テニス肘
+Guillain-Barré症候群
+Glanzmannの血小板無力症
+心室中隔欠損症
+デジェリン-ソッタ病
+Klüver-Bucy症候群
+感染症
+高安動脈炎
+精神発達遅滞
+虫垂炎
+田虫
+陰萎
+腰痛症
+クッシング病
+アレルギー性鼻炎
+原発性アルドステロン症
+Ménétrier病
+Bourneville-Pringle病
+旅行者血栓症
+進行性筋ジストロフィー症
+bronchial asthema
+posttraumatic amnesia
+脳軟化症
+帯下
+Pompe病
+neurogenic bladder dysfunction
+かぶれ
+毛細血管拡張性運動失調症
+脳卒中
+脳底動脈不完全栓塞
+Lesch-Nyhan症候群
+atheroma
+腹部大動脈瘤
+勃起不全
+敗血症
+癰
+内反脛骨
+急性腎不全
+糖質ホルモン過剰症候群
+汗貯留症候群
+ぎっくり腰
+タムシ）
+閉塞性血栓性血管炎
+クーゲルベルグ・ヴェランダー病
+老人性痴呆症
+水痘
+くちびー
+本態性動脈血栓症
+胸腺低形成症
+膵炎
+魚の目
+Erectile Dysfunction
+シェーンライン-ヘノッホ紫斑病
+メビウス症候群
+プラダー・ウィリー症候群
+トルコ鞍空虚症候群
