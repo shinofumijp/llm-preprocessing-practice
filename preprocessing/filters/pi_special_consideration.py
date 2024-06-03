@@ -50,7 +50,7 @@ def process_filtering(input_file: str, output_base: str, output_file: str, debug
     if debug:
         os.makedirs(os.path.join(output_base, "stat", "filtering"), exist_ok=True)
         input_file_prefix = os.path.splitext(os.path.basename(input_file))[0]
-        with open(os.path.join(output_base, f"{input_file_prefix}.jsonl"), "w") as writer:
+        with open(os.path.join(output_base, "stat", "filtering", f"{input_file_prefix}.jsonl"), "w") as writer:
             writer.write(json.dumps(cleaner.statistics, ensure_ascii=False) + "\n")
 
 
